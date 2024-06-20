@@ -1,87 +1,92 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Design;
-using LojaTrabalhoWeb.Data;
+using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using LojaTrabalhoWeb.Models;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Options;
+using LojaTrabalhoWeb.Data;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.AspNetCore.Http;
+using LojaTrabalhoWeb.services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using System.IdentityModel.Tokens.Jwt;
+using System.IO;
+using System.Text.Json;
 using System;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
-builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddScoped<ProductService>();
+
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes("abc"))
+        };
+    });
 
 
 
 
-//Connction 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<LojaDbContext>(options=>options.UseMySql(connectionString, new MySqlServerVersion((new Version(8, 0, 26)))));
-// Configure the HTTP request pipeline.
+
+
+
 
 var app = builder.Build();
-if (!app.Environment.IsDevelopment())
+
+// Configurar as requisições HTTP 
+if (app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
+    app.UseDeveloperExceptionPage();
 }
 
-app.UseHttpsRedirection();
-app.MapPost("/createproduto", async (LojaDbContext dbContext, Produto newProduto) =>
+app.MapGet("/produtos", async (ProductService productService) =>
 {
-    dbContext.Produtos.Add(newProduto);
-    await dbContext.SaveChangesAsync();
-    return Results.Created($"/createproduto/{newProduto.Id}", newProduto);
-});
-
-app.MapGet("/produtos", async (LojaDbContext dbContext) =>
-{
-    var produtos = await dbContext.Produtos.ToListAsync();
+    var produtos = await productService.GetAllProductsAsync();
     return Results.Ok(produtos);
 });
-app.MapGet("/produtos/{id}", async (int id, LojaDbContext dbContext) =>
+
+app.MapGet("/produtos/{id}", async (int id, ProductService productService) =>
 {
-    var produtos = await dbContext.Produtos.ToListAsync();
-    if(produtos == null)
+    var produto = await productService.GetProductByIdAsync(id);
+    if (produto == null)
     {
-        return Results.NotFound($"Produto with ID {id} not found");
+        return Results.NotFound($"Product with ID {id} not found.");
     }
-    return Results.Ok(produtos);
+    return Results.Ok(produto);
 });
-app.MapPut("/produtos/{id}", async (int id, LojaDbContext dbContext, Produto updateProduto) =>
+
+app.MapPost("/produtos", async (Produto produto, ProductService productService) =>
 {
-    var existingProduto = await dbContext.Produtos.FindAsync(id);
-    if (existingProduto == null)
+    await productService.AddProductAsync(produto);
+    return Results.Created($"/produtos/{produto.Id}", produto);
+});
+
+app.MapPut("/produtos/{id}", async (int id, Produto produto, ProductService productService) =>
+{
+    if (id != produto.Id)
     {
-        return Results.NotFound($"Produto with ID {id} not found");
+        return Results.BadRequest("Product ID mismatch.");
     }
 
-    existingProduto.Nome = updateProduto.Nome;
-    existingProduto.Preco = updateProduto.Preco;
-    existingProduto.Fornecedor = updateProduto.Fornecedor; 
-
-    await dbContext.SaveChangesAsync();
-
-    return Results.Ok(existingProduto);
-
+    await productService.UpdateProductAsync(produto);
+    return Results.Ok();
 });
 
-app.MapPost("/createcliente", async (LojaDbContext dbContext, Cliente newCliente) =>
+app.MapDelete("/produtos/{id}", async (int id, ProductService productService) =>
 {
-    dbContext.Clientes.Add(newCliente);
-    await dbContext.SaveChangesAsync();
-    return Results.Created($"/createcliente/{newCliente.Id}", newCliente);
+    await productService.DeleteProductAsync(id);
+    return Results.Ok();
 });
-app.UseStaticFiles();
 
-app.UseRouting();
-
-app.UseAuthorization();
 
 app.Run();
