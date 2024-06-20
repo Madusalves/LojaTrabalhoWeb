@@ -1,5 +1,6 @@
 ﻿using LojaTrabalhoWeb.Models;
 using Microsoft.EntityFrameworkCore;
+using MySqlConnector;
 
 namespace LojaTrabalhoWeb.Data
 {
