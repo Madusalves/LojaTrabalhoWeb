@@ -1,10 +1,22 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
+using LojaTrabalhoWeb.Data;
+using LojaTrabalhoWeb.Models;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddEndpointsApiExplorer();
 
 var app = builder.Build();
 
+
+//Connction 
+var connectionString = builder.Configuration.GetConnectionString("DefaultConection");
+builder.Services.AddDbContext<LojaDbContext>(options=>options.UseMySql(connectionString, new MySqlServerVersion((new Version(8, 0, 26)))));
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
