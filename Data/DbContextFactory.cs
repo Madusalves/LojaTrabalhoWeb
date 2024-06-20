@@ -21,6 +21,5 @@ namespace LojaTrabalhoWeb.Data
             return new LojaDbContext(optionsBuilder.Options);
         }
 
-        public
     }
 }
