@@ -3,6 +3,7 @@ using LojaTrabalhoWeb.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LojaTrabalhoWeb.Migrations
 {
     [DbContext(typeof(LojaDbContext))]
-    partial class LojaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240620202120_AddFornecedorToProduto")]
+    partial class AddFornecedorToProduto
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,31 +24,6 @@ namespace LojaTrabalhoWeb.Migrations
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
 
-            modelBuilder.Entity("LojaTrabalhoWeb.Models.Cliente", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Cpf")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Clientes");
-                });
-
             modelBuilder.Entity("LojaTrabalhoWeb.Models.Produto", b =>
                 {
                     b.Property<int>("Id")
@@ -53,10 +31,6 @@ namespace LojaTrabalhoWeb.Migrations
                         .HasColumnType("int");
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Fornecedor")
-                        .IsRequired()
-                        .HasColumnType("longtext");
 
                     b.Property<string>("Nome")
                         .IsRequired()
