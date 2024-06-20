@@ -12,10 +12,10 @@ namespace LojaTrabalhoWeb.Data
 
             IConfigurationRoot configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsetting.json")
+                .AddJsonFile("appsettings.json")
                 .Build();
 
-            var connectionString = configuration.GetConnectionString("DefaultConection");
+            var connectionString = configuration.GetConnectionString("DefaultConnection");
             optionsBuilder.UseMySql(connectionString, new MySqlServerVersion((new Version (8,0,26))));
 
             return new LojaDbContext(optionsBuilder.Options);
