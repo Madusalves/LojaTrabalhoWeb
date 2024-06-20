@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
+using System.IO;
+using System;
 
 namespace LojaTrabalhoWeb.Data
 {

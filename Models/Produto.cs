@@ -4,7 +4,7 @@
     {
         public int Id { get; set; }
         public string Nome { get; set; }
-        public Double Preco { get; set; }
-        
+        public double Preco { get; set; }
+        public string Fornecedor { get; set; }
     }
 }
