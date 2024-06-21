@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace LojaTrabalhoWeb.Models
 {
@@ -13,6 +14,28 @@ namespace LojaTrabalhoWeb.Models
             Id = id;
             Nome = nome;
             Produtos = new List<Produto>();
+        }
+        public void AdicionarProduto(Produto produto, int quantidade)
+        {
+            if (produto == null)
+            {
+                throw new ArgumentNullException("produto");
+            }
+
+            if (quantidade <= 0)
+            {
+                throw new ArgumentOutOfRangeException("quantidade", "A quantidade deve ser maior que zero.");
+            }
+
+            var produtoExistente = Produtos.Find(p => p.Id == produto.Id);
+
+            if (produtoExistente == null)
+            {
+                Produtos.Add(produto);
+            }
+
+            produtoExistente ??= produto;
+            produtoExistente.Quantidade += quantidade;
         }
     }
 }
