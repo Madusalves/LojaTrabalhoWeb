@@ -5,27 +5,6 @@ namespace LojaTrabalhoWeb.Models
 {
     public class VendasModel
     {
-        public class Deposit
-        {
-            public int Id { get; set; }
-            public string Nome { get; set; }
-            public virtual ICollection<DepositProduct> ProdutosDeposito { get; set; } 
-        }
-
-        public class DepositProduct
-        {
-            public int IdDeposito { get; set; }
-            public Deposit Deposito { get; set; }
-
-            public int IdProduto { get; set; }
-            public Produto Produto { get; set; }
-
-            public int Quantidade { get; set; }
-        }
-
-
-        public class Sale
-        {
             public int Id { get; set; }
             public DateTime DataVenda { get; set; }
             public string NumeroNotaFiscal { get; set; }
@@ -37,7 +16,7 @@ namespace LojaTrabalhoWeb.Models
 
             public int QuantidadeVendida { get; set; }
             public decimal PrecoUnitario { get; set; }
-        }
+       
 
     }
 }

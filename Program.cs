@@ -15,6 +15,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Text.Json;
 using System;
+using LojaTrabalhoWeb.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -88,5 +89,20 @@ app.MapDelete("/produtos/{id}", async (int id, ProductService productService) =>
     return Results.Ok();
 });
 
+
+app.MapGet("/api/compras", async (VendasService service) =>
+{
+    return await service.ObterVendas();
+});
+
+app.MapGet("/api/compras/{id}", async (int id, VendasService service) =>
+{
+    var venda = await service.ObterVendaPorId(id);
+    if (venda == null)
+    {
+        return Results.NotFound();
+    }
+    return Results.Ok(venda);
+});
 
 app.Run();
