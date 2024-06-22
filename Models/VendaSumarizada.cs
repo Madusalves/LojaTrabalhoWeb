@@ -17,7 +17,7 @@ namespace LojaTrabalhoWeb.Models
         public decimal ValorTotalVendido { get; set; }
     }
 
-    public static List<VendaSumarizada> ConsultarVendasProdutoSumarizadas(int idProduto)
+    public static List<VendaSumarizada> ConsultarVendasProdutoSumarizadas(int idProduto, IEnumerable<Venda> vendasEncontradas)
     {
         var vendasSumarizadas = new List<VendaSumarizada>();
 
@@ -43,7 +43,7 @@ namespace LojaTrabalhoWeb.Models
             }
 
             vendaSumarizada.QuantidadeTotalVendida += venda.QuantidadeVendida;
-            vendaSumarizada.ValorTotalVendido += venda.ValorTotal; 
+            vendaSumarizada.ValorTotalVendido += venda.ValorTotal;
         }
 
         return vendasSumarizadas;
