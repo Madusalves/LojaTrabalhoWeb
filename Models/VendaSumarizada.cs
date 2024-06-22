@@ -9,6 +9,7 @@ namespace LojaTrabalhoWeb.Models
     {
         public VendaSumarizada(int id, DateTime dataVenda, string notaFiscal, Cliente cliente, Produto produto, int quantidadeVendida, decimal precoUnitario) : base(id, dataVenda, notaFiscal, cliente, produto, quantidadeVendida, precoUnitario)
         {
+
         }
 
         public string NomeProduto { get; set; }
@@ -21,7 +22,7 @@ namespace LojaTrabalhoWeb.Models
         var vendasSumarizadas = new List<VendaSumarizada>();
 
         // Obter as vendas do produto especificado
-        IEnumerable<Venda> vendasEncontradas = // Obter as vendas do produto especificado
+        IEnumerable<Venda> vendasEncontradas;
 
         foreach (var venda in vendasEncontradas)
         {
@@ -42,7 +43,7 @@ namespace LojaTrabalhoWeb.Models
             }
 
             vendaSumarizada.QuantidadeTotalVendida += venda.QuantidadeVendida;
-            vendaSumarizada.ValorTotalVendido += venda.ValorTotal; // ValorTotal da venda já foi calculado na classe Venda
+            vendaSumarizada.ValorTotalVendido += venda.ValorTotal; 
         }
 
         return vendasSumarizadas;
